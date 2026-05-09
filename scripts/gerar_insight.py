@@ -1,14 +1,15 @@
 import os, json, requests
 from datetime import date
 
-# 1. Dólar — URL corrigida
+# 1. Dólar — API alternativa (formato diferente)
 try:
     dolar_res = requests.get(
-        "https://economia.awesomeapi.com.br/last/USD-BRL",
+        "https://economia.awesomeapi.com.br/json/daily/USD-BRL/1",
         timeout=10
     ).json()
-    dolar = dolar_res["USDBRL"]
-    dolar_texto = f"R$ {float(dolar['bid']):.2f} ({float(dolar['pctChange']):+.2f}% hoje)"
+    bid = float(dolar_res[0]["bid"])
+    pct = float(dolar_res[0]["pctChange"])
+    dolar_texto = f"R$ {bid:.2f} ({pct:+.2f}% hoje)"
 except Exception as e:
     dolar_texto = "Indisponível"
     print(f"Erro dólar: {e}")
