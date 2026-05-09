@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vértice — Painel Estratégico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D0D0D;
+  --bg-2: #111111;
+  --bg-card: #161616;
+  --bg-card-2: #1a1a1a;
+  --text: #F5F5F3;
+  --text-muted: #888884;
+  --text-dim: #555552;
+  --neon: #CAFF3C;
+  --neon-dim: rgba(202,255,60,0.08);
+  --neon-glow: 0 0 20px rgba(202,255,60,0.35), 0 0 60px rgba(202,255,60,0.12);
+  --border: rgba(255,255,255,0.07);
+  --border-neon: rgba(202,255,60,0.2);
+  --verde: #52D68A;
+  --vermelho: #FF6B6B;
+  --azul: #7B9FFF;
+  --laranja: #FF9F4A;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --font: "Montserrat", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #080808; }
+::-webkit-scrollbar-thumb { background: var(--neon); border-radius: 3px; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0 0 60px;
+}
+
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+/* ─── HEADER ─── */
+.dash-header {
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+  margin-bottom: 40px;
+}
+
+.dash-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text);
+}
+.logo span { color: var(--neon); }
+.logo-sub {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  display: block;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ultima-atualizacao {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--verde);
+  box-shadow: 0 0 6px var(--verde);
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.btn-voltar {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+.btn-voltar:hover { color: var(--neon); }
+
+/* ─── SEÇÃO TÍTULO ─── */
+.section-titulo {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.section-titulo h2 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-titulo h2::before {
+  content: "";
+  width: 16px;
+  height: 2px;
+  background: var(--neon);
+  border-radius: 1px;
+  display: inline-block;
+}
+
+/* ─── GRID MERCADO ─── */
+.mercado-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+/* ─── CARD COTAÇÃO ─── */
+.card-cotacao {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 22px 18px;
+  transition: border-color 0.25s, transform 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-cotacao::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent, var(--neon));
+  opacity: 0.6;
+}
+
+.card-cotacao:hover {
+  border-color: var(--border-neon);
+  transform: translateY(-2px);
+}
+
+.card-cotacao .cc-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-cotacao .cc-valor {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -1px;
+}
+
+.card-cotacao .cc-variacao {
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+}
+
+.cc-variacao.alta {
+  background: rgba(82,214,138,0.12);
+  color: var(--verde);
+}
+
+.cc-variacao.baixa {
+  background: rgba(255,107,107,0.12);
+  color: var(--vermelho);
+}
+
+.cc-variacao.neutro {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-muted);
+}
+
+.card-cotacao .cc-fonte {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.card-cotacao .cc-skeleton {
+  background: linear-gradient(90deg, var(--bg-card-2) 25%, rgba(255,255,255,0.04) 50%, var(--bg-card-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-valor {
+  height: 36px;
+  width: 130px;
+  margin-bottom: 10px;
+}
+
+.skeleton-var {
+  height: 22px;
+  width: 80px;
+  border-radius: 100px;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ─── CARD MINI CHARTS ─── */
+.cc-sparkline {
+  margin-top: 12px;
+  height: 36px;
+}
+
+.cc-sparkline svg { width: 100%; height: 100%; }
+
+/* ─── INSIGHT DIÁRIO ─── */
+.insight-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.insight-card::after {
+  content: "";
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(202,255,60,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.insight-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.insight-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--neon-dim);
+  border: 1px solid var(--border-neon);
+  color: var(--neon);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 12px;
+}
+
+.insight-titulo {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.3;
+  max-width: 480px;
+}
+
+.insight-data {
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.insight-corpo {
+  font-size: 0.9rem;
+  line-height: 1.85;
+  color: #c8c8c5;
+}
+
+.insight-corpo .item-insight {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+
+.insight-corpo .item-insight:hover {
+  border-color: var(--border-neon);
+}
+
+.insight-corpo .item-insight .num {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--neon);
+  background: var(--neon-dim);
+  border: 1px solid var(--border-neon);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.insight-corpo .item-insight p {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+.insight-corpo .item-insight p strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.insight-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.insight-loading .skel-line {
+  height: 14px;
+  border-radius: 4px;
+}
+
+.insight-loading .skel-line.w100 { width: 100%; }
+.insight-loading .skel-line.w80  { width: 80%; }
+.insight-loading .skel-line.w90  { width: 90%; }
+.insight-loading .skel-line.w60  { width: 60%; }
+
+.insight-footer {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.insight-fonte {
+  font-size: 10px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-regenerar {
+  background: transparent;
+  border: 1px solid var(--border-neon);
+  color: var(--neon);
+  padding: 8px 18px;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-regenerar:hover {
+  background: var(--neon-dim);
+}
+
+.btn-regenerar:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── CARDS INDICADORES EXTRA ─── */
+.indicadores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.card-indicador {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  transition: border-color 0.2s;
+}
+
+.card-indicador:hover { border-color: var(--border-neon); }
+
+.ci-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.ci-valor {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.ci-detalhe {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ─── CTA BOTTOM ─── */
+.cta-bottom {
+  background: var(--bg-card);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  text-align: center;
+}
+
+.cta-bottom h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.cta-bottom h3 span { color: var(--neon); }
+
+.cta-bottom p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+
+.cta-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-diagnostico {
+  background: var(--neon);
+  color: #0D0D0D;
+  text-decoration: none;
+  padding: 13px 26px;
+  border-radius: var(--radius);
+  font-weight: 800;
+  font-size: 13px;
+  transition: all 0.2s;
+  box-shadow: var(--neon-glow);
+}
+
+.btn-diagnostico:hover { transform: translateY(-2px); }
+
+.btn-wa {
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  padding: 13px 26px;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.btn-wa:hover { background: #1fb855; }
+
+/* ─── ERRO ─── */
+.erro-inline {
+  font-size: 12px;
+  color: var(--vermelho);
+  padding: 12px 16px;
+  background: rgba(255,107,107,0.08);
+  border: 1px solid rgba(255,107,107,0.2);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── RESPONSIVO ─── */
+@media (max-width: 600px) {
+  .mercado-grid { grid-template-columns: 1fr 1fr; }
+  .indicadores-grid { grid-template-columns: 1fr 1fr; }
+  .insight-card { padding: 22px; }
+  .cta-btns { flex-direction: column; }
+  .btn-diagnostico, .btn-wa { text-align: center; }
+}
+
+@media (max-width: 380px) {
+  .mercado-grid { grid-template-columns: 1fr; }
+  .indicadores-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="dash-header">
+  <div class="container">
+    <a href="vertice.html" class="logo">
+      VÉRT<span>I</span>CE
+      <span class="logo-sub">Painel Estratégico</span>
+    </a>
+    <div class="header-right">
+      <div class="ultima-atualizacao">
+        <span class="status-dot"></span>
+        <span id="horario-atualizacao">Atualizando...</span>
+      </div>
+      <a href="vertice-hub.html" class="btn-voltar">← Hub</a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- MERCADO: DÓLAR E SOJA -->
+  <div class="section-titulo">
+    <h2>Mercado Agro</h2>
+  </div>
+
+  <div class="mercado-grid" id="mercado-grid">
+
+    <!-- CARD DÓLAR -->
+    <div class="card-cotacao" style="--accent: #CAFF3C;">
+      <div class="cc-label">🇺🇸 Dólar / Real</div>
+      <div id="dolar-valor">
+        <div class="cc-skeleton skeleton-valor"></div>
+        <div class="cc-skeleton skeleton-var" style="margin-bottom:10px;"></div>
+      </div>
+      <div class="cc-fonte" id="dolar-fonte"></div>
+      <div class="cc-sparkline" id="dolar-spark"></div>
+    </div>
+
+    <!-- CARD SOJA CBOT -->
+    <div class="card-cotacao" style="--accent: #52D68A;">
+      <div class="cc-label">🌱 Soja CBOT (¢/bu)</div>
+      <div id="soja-valor">
+        <div class="cc-skeleton skeleton-valor"></div>
+        <div class="cc-skeleton skeleton-var" style="margin-bottom:10px;"></div>
+      </div>
+      <div class="cc-fonte" id="soja-fonte"></div>
+      <div class="cc-sparkline" id="soja-spark"></div>
+    </div>
+
+    <!-- CARD SOJA BRL -->
+    <div class="card-cotacao" style="--accent: #52D68A;">
+      <div class="cc-label">🌱 Soja (R$/saca 60kg)</div>
+      <div id="soja-brl-valor">
+        <div class="cc-skeleton skeleton-valor"></div>
+        <div class="cc-skeleton skeleton-var" style="margin-bottom:10px;"></div>
+      </div>
+      <div class="cc-fonte" id="soja-brl-fonte"></div>
+    </div>
+
+    <!-- CARD EURO -->
+    <div class="card-cotacao" style="--accent: #7B9FFF;">
+      <div class="cc-label">🇪🇺 Euro / Real</div>
+      <div id="euro-valor">
+        <div class="cc-skeleton skeleton-valor"></div>
+        <div class="cc-skeleton skeleton-var" style="margin-bottom:10px;"></div>
+      </div>
+      <div class="cc-fonte" id="euro-fonte"></div>
+    </div>
+
+  </div><!-- /mercado-grid -->
+
+  <!-- INDICADORES CONTEXTUAIS -->
+  <div class="section-titulo" style="margin-top:8px;">
+    <h2>Contexto do Dia</h2>
+  </div>
+
+  <div class="indicadores-grid" id="indicadores-grid">
+    <div class="card-indicador">
+      <div class="ci-label">📅 Data</div>
+      <div class="ci-valor" id="ind-data">--</div>
+      <div class="ci-detalhe" id="ind-hora">--</div>
+    </div>
+    <div class="card-indicador">
+      <div class="ci-label">🌡️ Spread Dólar</div>
+      <div class="ci-valor" id="ind-spread">--</div>
+      <div class="ci-detalhe">Compra vs. venda</div>
+    </div>
+    <div class="card-indicador">
+      <div class="ci-label">⚖️ Soja em USD/t</div>
+      <div class="ci-valor" id="ind-soja-usd">--</div>
+      <div class="ci-detalhe">Equivalente métrico</div>
+    </div>
+    <div class="card-indicador">
+      <div class="ci-label">📊 Soja × Dólar</div>
+      <div class="ci-valor" id="ind-ratio">--</div>
+      <div class="ci-detalhe">Sacos por USD 1.000</div>
+    </div>
+  </div>
+
+  <!-- INSIGHT DIÁRIO IA -->
+  <div class="section-titulo">
+    <h2>Insight Estratégico do Dia</h2>
+  </div>
+
+  <div class="insight-card">
+    <div class="insight-header">
+      <div>
+        <div class="insight-badge">✦ Gerado por IA — Gemini</div>
+        <h2 class="insight-titulo" id="insight-titulo">Analisando o mercado de hoje...</h2>
+      </div>
+      <div>
+        <div class="insight-data" id="insight-data"></div>
+        <button class="btn-regenerar" id="btn-regenerar" onclick="gerarInsight(true)" disabled>
+          ↻ Atualizar
+        </button>
+      </div>
+    </div>
+
+    <div class="insight-corpo" id="insight-corpo">
+      <div class="insight-loading">
+        <div class="cc-skeleton skel-line w100"></div>
+        <div class="cc-skeleton skel-line w90"></div>
+        <div class="cc-skeleton skel-line w80"></div>
+        <div style="height:12px;"></div>
+        <div class="cc-skeleton skel-line w100"></div>
+        <div class="cc-skeleton skel-line w80"></div>
+        <div class="cc-skeleton skel-line w60"></div>
+      </div>
+    </div>
+
+    <div class="insight-footer">
+      <div class="insight-fonte">
+        <span>🔗</span>
+        <span id="insight-fonte">Dados: AwesomeAPI + Alpha Vantage · Análise: Gemini 2.0 Flash</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA BOTTOM -->
+  <div class="cta-bottom">
+    <h3>Transforme dados em <span>estratégia de evento</span></h3>
+    <p>Esse painel mostra o contexto. O diagnóstico Vértice transforma esse contexto em um plano de ação para o seu próximo evento.</p>
+    <div class="cta-btns">
+      <a href="vertice-diagnostico.html" class="btn-diagnostico">⚡ Fazer Diagnóstico Gratuito</a>
+      <a href="https://wa.me/5542994178905?text=Olá%2C%20vi%20o%20painel%20estratégico%20da%20Vértice%20e%20quero%20conversar!" target="_blank" class="btn-wa">💬 Falar com Guilherme</a>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── HELPERS ───
+const fmt = (n, decimais=2) => Number(n).toLocaleString("pt-BR", { minimumFractionDigits: decimais, maximumFractionDigits: decimais });
+const fmtData = () => new Date().toLocaleDateString("pt-BR", { weekday:"long", day:"2-digit", month:"long", year:"numeric" });
+const fmtHora = () => new Date().toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" });
+
+function variacaoHTML(txt) {
+  if (!txt || txt === "Indisponível") return "";
+  const match = txt.match(/\(([^)]+)\)/);
+  if (!match) return "";
+  const raw = match[1].replace("%","").replace("+","");
+  const pct = parseFloat(raw);
+  if (isNaN(pct)) return "";
+  const cls = pct > 0 ? "alta" : pct < 0 ? "baixa" : "neutro";
+  const seta = pct > 0 ? "▲" : pct < 0 ? "▼" : "●";
+  return `<span class="cc-variacao ${cls}">${seta} ${pct > 0 ? "+" : ""}${fmt(pct)}%</span>`;
+}
+
+// ─── CARREGAR JSON GERADO PELO GITHUB ACTIONS ───
+async function carregarDados() {
+  try {
+    const res = await fetch("public/insight-do-dia.json?v=" + Date.now());
+    if (!res.ok) throw new Error("JSON não encontrado");
+    const d = await res.json();
+
+    // Dólar
+    const dolarNum = d.dolar ? parseFloat(d.dolar.replace("R$","").trim()) : null;
+    document.getElementById("dolar-valor").innerHTML = `
+      <div class="cc-valor">${d.dolar || "—"}</div>
+      ${variacaoHTML(d.dolar)}
+    `;
+    document.getElementById("dolar-fonte").textContent = "ExchangeRate-API · Atualizado às 8h";
+
+    // Euro — fallback calculado se não vier no JSON
+    document.getElementById("euro-valor").innerHTML = `<div class="cc-valor">—</div><div class="cc-fonte">Não incluído hoje</div>`;
+    document.getElementById("euro-fonte").textContent = "";
+
+    // Soja CBOT
+    document.getElementById("soja-valor").innerHTML = `
+      <div class="cc-valor">${d.soja || "—"}</div>
+      ${variacaoHTML(d.soja)}
+    `;
+    document.getElementById("soja-fonte").textContent = "Yahoo Finance · CBOT Futuros";
+
+    // Soja BRL estimada (CBOT × dólar)
+    let sojaBRLtxt = "—";
+    if (d.soja && dolarNum) {
+      const sojaMatch = d.soja.match(/([\d.]+)/);
+      if (sojaMatch) {
+        const sojaUSD = parseFloat(sojaMatch[1]);
+        // 1 bushel = 27.2155 kg → 60kg = 2.2046 bushels
+        const sojaBRL = (sojaUSD * 2.2046 * dolarNum).toFixed(0);
+        sojaBRLtxt = `R$ ${parseInt(sojaBRL).toLocaleString("pt-BR")}`;
+      }
+    }
+    document.getElementById("soja-brl-valor").innerHTML = `<div class="cc-valor">${sojaBRLtxt}</div>`;
+    document.getElementById("soja-brl-fonte").textContent = "Base CBOT × câmbio do dia";
+
+    // Indicadores contextuais
+    const now = new Date();
+    document.getElementById("ind-data").textContent = now.toLocaleDateString("pt-BR", { day:"2-digit", month:"short" });
+    document.getElementById("ind-hora").textContent = "Dados de " + d.data;
+
+    // Meta e Google (novos campos do JSON)
+    if (d.meta_acao) {
+      document.getElementById("ind-spread").textContent = d.meta_acao.split(" ")[1] || d.meta_acao;
+      document.getElementById("ind-spread").closest(".card-indicador").querySelector(".ci-label").textContent = "📱 Meta (ação)";
+      document.getElementById("ind-spread").closest(".card-indicador").querySelector(".ci-detalhe").textContent = "Nasdaq · impacto em mídia paga";
+    }
+
+    if (d.ibovespa) {
+      document.getElementById("ind-ratio").textContent = d.ibovespa.split(" ")[0] || d.ibovespa;
+      document.getElementById("ind-ratio").closest(".card-indicador").querySelector(".ci-label").textContent = "📈 Ibovespa";
+      document.getElementById("ind-ratio").closest(".card-indicador").querySelector(".ci-detalhe").textContent = "B3 · mercado brasileiro";
+    }
+
+    if (d.milho) {
+      document.getElementById("ind-soja-usd").textContent = d.milho.replace("US$ ","").replace("/bushel","");
+      document.getElementById("ind-soja-usd").closest(".card-indicador").querySelector(".ci-label").textContent = "🌽 Milho CBOT";
+      document.getElementById("ind-soja-usd").closest(".card-indicador").querySelector(".ci-detalhe").textContent = "Chicago · futuros";
+    }
+
+    // Horário de atualização
+    document.getElementById("horario-atualizacao").textContent = "Dados de " + d.data + " · 8h BRT";
+
+    // Insight da IA
+    renderizarInsight(d.insight, d.data);
+
+  } catch(e) {
+    console.error("Erro ao carregar dados:", e);
+    document.getElementById("insight-titulo").textContent = "Erro ao carregar dados do servidor.";
+    document.getElementById("insight-corpo").innerHTML = `<div class="erro-inline">⚠️ Não foi possível carregar o insight de hoje. Tente recarregar a página.</div>`;
+    document.getElementById("horario-atualizacao").textContent = "Erro de conexão";
+  }
+}
+
+// ─── RENDERIZAR INSIGHT ───
+function renderizarInsight(texto, data) {
+  document.getElementById("insight-titulo").textContent = "Análise Estratégica do Dia";
+  document.getElementById("insight-data").textContent = data || "";
+  document.getElementById("insight-badge") && (document.getElementById("insight-badge").textContent = "✦ Gerado por IA — Groq / LLaMA");
+
+  // Tenta parsear blocos estruturados (**TÍTULO** 
+ texto)
+  const blocos = texto.split(/
+{2,}/).filter(b => b.trim());
+
+  if (blocos.length >= 2) {
+    const html = blocos.map((bloco, i) => {
+      const linhas = bloco.trim().split("
+");
+      const titulo = linhas[0].replace(/\*\*/g, "").replace(/^#+\s*/,"").trim();
+      const corpo = linhas.slice(1).join(" ").trim();
+      return `<div class="item-insight">
+        <div class="num">${i+1}</div>
+        <p><strong>${titulo}</strong>${corpo ? "<br>" + corpo : ""}</p>
+      </div>`;
+    }).join("");
+    document.getElementById("insight-corpo").innerHTML = html;
+  } else {
+    // Fallback: exibe como texto corrido
+    document.getElementById("insight-corpo").innerHTML = `<p style="font-size:14px;line-height:1.8;color:#c8c8c5;">${texto.replace(/
+/g,"<br>").replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")}</p>`;
+  }
+
+  document.getElementById("btn-regenerar").disabled = false;
+  document.getElementById("insight-fonte").textContent = "Dados: ExchangeRate-API + Yahoo Finance · Análise: Groq LLaMA 3.3";
+}
+
+// ─── INIT ───
+document.addEventListener("DOMContentLoaded", carregarDados);
+</script>
+
+</body>
+</html>
