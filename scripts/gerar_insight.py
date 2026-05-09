@@ -1,19 +1,16 @@
 import os, json, requests
 from datetime import date
 
-# 1. Dólar — ExchangeRate-API (gratuita, sem chave, testada e funcionando)
+# 1. Dólar
 try:
-    res = requests.get(
-        "https://open.er-api.com/v6/latest/USD",
-        timeout=10
-    ).json()
+    res = requests.get("https://open.er-api.com/v6/latest/USD", timeout=10).json()
     brl = res["rates"]["BRL"]
     dolar_texto = f"R$ {brl:.2f}"
 except Exception as e:
     dolar_texto = "Indisponível"
     print(f"Erro dólar: {e}")
 
-# 2. Soja — Yahoo Finance
+# 2. Soja
 try:
     soja_res = requests.get(
         "https://query1.finance.yahoo.com/v8/finance/chart/ZS=F",
@@ -38,21 +35,29 @@ Dados de hoje ({date.today().strftime('%d/%m/%Y')}):
 
 Escreva um insight estratégico de no máximo 4 linhas para profissionais de marketing e eventos no agronegócio brasileiro. Tom direto, analítico e prático. Sem bullet points. Em português do Brasil."""
 
-# 4. Gemini
+# 4. Groq (gratuito, sem cartão)
 api_key = os.environ["GEMINI_API_KEY"]
 resposta = requests.post(
-    f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}",
-    json={"contents": [{"parts": [{"text": prompt}]}]},
+    "https://api.groq.com/openai/v1/chat/completions",
+    headers={
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    },
+    json={
+        "model": "llama-3.3-70b-versatile",
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": 300
+    },
     timeout=30
 )
 
-print(f"Status Gemini: {resposta.status_code}")
+print(f"Status Groq: {resposta.status_code}")
 
 if resposta.status_code != 200:
-    print("Erro Gemini:", resposta.text)
+    print("Erro Groq:", resposta.text)
     insight = "Análise indisponível no momento."
 else:
-    insight = resposta.json()["candidates"][0]["content"]["parts"][0]["text"]
+    insight = resposta.json()["choices"][0]["message"]["content"]
     print(f"✅ Insight gerado com sucesso!")
 
 # 5. Salva JSON
