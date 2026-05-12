@@ -28,6 +28,38 @@ const yahooChart = async (symbol) => {
   return { symbol, price, previous, pct };
 };
 
+const loadCurrencies = async () => {
+  try {
+    const fx = await fetchJson("https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL");
+    return {
+      source: "AwesomeAPI",
+      usd: {
+        brl: Number.parseFloat(fx.USDBRL.bid),
+        pct: Number.parseFloat(fx.USDBRL.pctChange)
+      },
+      eur: {
+        brl: Number.parseFloat(fx.EURBRL.bid),
+        pct: Number.parseFloat(fx.EURBRL.pctChange)
+      }
+    };
+  } catch (error) {
+    const fallback = await fetchJson("https://open.er-api.com/v6/latest/USD");
+    const usdBrl = Number(fallback?.rates?.BRL);
+    const eurUsd = Number(fallback?.rates?.EUR);
+
+    if (!Number.isFinite(usdBrl)) throw error;
+
+    return {
+      source: "ExchangeRate-API",
+      usd: { brl: usdBrl, pct: 0 },
+      eur: {
+        brl: Number.isFinite(eurUsd) && eurUsd > 0 ? usdBrl / eurUsd : null,
+        pct: 0
+      }
+    };
+  }
+};
+
 exports.handler = async () => {
   const payload = {
     timestamp: new Date().toISOString(),
@@ -43,17 +75,12 @@ exports.handler = async () => {
   };
 
   try {
-    const fx = await fetchJson("https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL");
-    payload.currencies.usd = {
-      brl: Number.parseFloat(fx.USDBRL.bid),
-      pct: Number.parseFloat(fx.USDBRL.pctChange)
-    };
-    payload.currencies.eur = {
-      brl: Number.parseFloat(fx.EURBRL.bid),
-      pct: Number.parseFloat(fx.EURBRL.pctChange)
-    };
+    const fx = await loadCurrencies();
+    payload.sources.currencies = fx.source;
+    payload.currencies.usd = fx.usd;
+    if (fx.eur?.brl) payload.currencies.eur = fx.eur;
   } catch (error) {
-    payload.errors.push({ source: "AwesomeAPI", message: error.message });
+    payload.errors.push({ source: "cambio", message: error.message });
   }
 
   const usd = payload.currencies.usd?.brl || 5.7;
