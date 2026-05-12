@@ -880,7 +880,7 @@
       if (!grid) return;
 
       try {
-        const source = localStorage.getItem("vt_sheets") || DEFAULT_SHEETS_URL;
+        const source = DEFAULT_SHEETS_URL;
         const response = await fetch(source, { signal: AbortSignal.timeout(8000) });
         if (!response.ok) throw new Error("planilha indisponível");
         const csv = await response.text();
